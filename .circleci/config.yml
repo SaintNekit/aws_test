@@ -1,33 +1,39 @@
 version: 2.1
 orbs:
-  # aws-cli: circleci/aws-cli@0.1.18
-   aws-s3: circleci/aws-s3@1.0.15
+  aws-cli: circleci/aws-cli@0.1.18
 jobs:
   build:
-    working_directory: ~/aws_test
+    working_directory: /aws_test
     docker:
       - image: node:10.15.3
     steps:
       - checkout
+      - run: mkdir -p workspace
       - run: npm install
       - run: npm run build
-
-  deploy:
-    executor: aws-cli/default
-    steps:
-      - run: ls -la
-      - aws-s3/sync:
-          from: /aws_test/public/
-          overwrite: true
-          to: 's3://awssaintbucket'
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - .
 
   # deploy:
-  #   working_directory: ~/aws_test     
   #   executor: aws-cli/default
   #   steps:
-  #     - aws-cli/setup:
-  #         profile-name: default
-  #     - run: aws s3 sync ~/aws_test/public/ s3://awssaintbucket
+  #     - run: ls -la
+  #     - aws-s3/sync:
+  #         from: /aws_test/public/
+  #         overwrite: true
+  #         to: 's3://awssaintbucket'
+
+  deploy:
+    working_directory: /aws_test     
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: /aws_test/workspace
+      - aws-cli/setup:
+          profile-name: default
+      - run: aws s3 sync ./public/ s3://awssaintbucket
       
 workflows:
     build:
