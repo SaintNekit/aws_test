@@ -10,20 +10,14 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   deploy:
-    # working_directory: ~/Documents/MyCode/aws_test     
+    working_directory: ~/aws_test     
     executor: aws-cli/default
     steps:
-      - attach_workspace: 
-          at: .
       - aws-cli/setup:
           profile-name: default
-      - run: aws s3 sync ~/aws_test/public/ s3://awssaintbucket
+      - run: aws s3 sync ./public/ s3://awssaintbucket
       
 workflows:
     build:
