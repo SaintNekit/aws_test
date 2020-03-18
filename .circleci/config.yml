@@ -9,25 +9,16 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
-      # - aws-s3/sync:
-      #   arguments: |
-      #     --acl public-read \
-      #     --cache-control "max-age=86400"
-      #     aws-access-key-id: AWS_ACCESS_KEY_ID
-      #     aws-region: AWS_REGION
-      #     aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-      #     from: ../public
-      #     overwrite: true
-      #     to: 's3://awssaintbucket/?region=us-east-2'
-      # - aws-s3/copy:
-      #     arguments: '--dry-run'
-      #     from: ./public
-      #     to: 's3://awssaintbucket'
+      - presist_to_workspace:
+          root: .
+          paths:
+            - .
+
   deploy:     
     executor: aws-cli/default
     steps:
       - attach_workspace: 
-          at: ../
+          at: .
       - aws-cli/setup:
           profile-name: default
       - run: aws s3 sync ./public s3://awssaintbucket
