@@ -29,15 +29,18 @@ jobs:
     working_directory: ~/aws_test     
     executor: aws-cli/default
     steps:
+      - checkout
       - attach_workspace:
           at: /aws_test/workspace
       - aws-cli/setup:
           profile-name: default
-      - run: ls -la    
+      # - run: ls -la    
       - run: aws s3 sync ./public/ s3://awssaintbucket
       
 workflows:
     build:
       jobs:
         - build
-        - deploy
+        - deploy:
+            require: 
+              - build
