@@ -27,9 +27,9 @@ jobs:
     executor: aws-cli/default
     steps:
       - attach_workspace: 
-        at: .
+          at: .
       - aws-cli/setup:
-        profile-name: default
+          profile-name: default
       - run: aws s3 sync ./public s3://awssaintbucket
 workflows:
     build:
