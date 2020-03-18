@@ -12,6 +12,7 @@ jobs:
       - run: npm run build
 
   deploy:
+    executor: aws-cli/default
     steps:
       - run: ls -la
       - aws-s3/sync:
