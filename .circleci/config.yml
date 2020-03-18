@@ -12,12 +12,20 @@ jobs:
       - run: npm run build
 
   deploy:
-    working_directory: ~/aws_test     
-    executor: aws-cli/default
     steps:
-      - aws-cli/setup:
-          profile-name: default
-      - run: aws s3 sync ./public/ s3://awssaintbucket
+      - run: ls -la
+      - aws-s3/sync:
+          from: /aws_test/public/
+          overwrite: true
+          to: 's3://awssaintbucket'
+
+  # deploy:
+  #   working_directory: ~/aws_test     
+  #   executor: aws-cli/default
+  #   steps:
+  #     - aws-cli/setup:
+  #         profile-name: default
+  #     - run: aws s3 sync ~/aws_test/public/ s3://awssaintbucket
       
 workflows:
     build:
