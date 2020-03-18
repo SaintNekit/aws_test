@@ -7,20 +7,18 @@ jobs:
     docker:
       - image: node:10.15.3
     steps:
+      - attach_workspace: 
+          at: ~/Documents/MyCode/aws_test
       - checkout
       - run: npm install
       - run: npm run build
-      - persist_to_workspace:
-          root: /
-          paths:
-            - .
 
   deploy:
     working_directory: ~/Documents/MyCode/aws_test     
     executor: aws-cli/default
     steps:
       - attach_workspace: 
-          at: /
+          at: ~/Documents/MyCode/aws_test
       - aws-cli/setup:
           profile-name: default
       - run: aws s3 sync ./public/ s3://awssaintbucket
