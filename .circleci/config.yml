@@ -23,7 +23,7 @@ jobs:
           at: .
       - aws-cli/setup:
           profile-name: default
-      - run: aws s3 sync ./public/ s3://awssaintbucket
+      - run: aws s3 sync ./build/ s3://awssaintbucket
       
 workflows:
     build:
